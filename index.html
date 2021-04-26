@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canon Composer</title>
+</head>
+<body>
+    <form action="http://localhost:5000/" style="margin: auto; width: intrinsic;">
+      <fieldset style="display: flex; flex-direction: column;">
+        <legend>Customize canon type</legend>
+        <label for="select-root">Select a root note:</label>
+        <select name="root" id="select-root">
+          <option value="c">C</option>
+          <option value="g">G</option>
+          <option value="d">D</option>
+          <option value="a">A</option>
+          <option value="e">E</option>
+          <option value="b">B</option>
+          <option value="g-flat">G-flat</option>
+          <option value="d-flat">D-flat</option>
+          <option value="a-flat">A-flat</option>
+          <option value="e-flat">E-flat</option>
+          <option value="b-flat">B-flat</option>
+          <option value="f">F</option>
+        </select>
+        <label for="select-type">Select a canon type:</label>
+        <select name="type" id="select-type">
+            <option value="S">Coming Later</option>
+            <option value="R">Reverse</option>
+            <option value="RS">Reverse and Coming Later</option>
+            <option value="IS">Inverse & Coming Later</option>
+            <option value="IRS">Inverse & Reverse & Coming Later</option>
+        </select>
+        <label>Select number of notes:</label>
+        <select name="notenum" id="select-notenum">
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+        </select>
+      </fieldset>
+      <button type="reset">Reset</button>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
