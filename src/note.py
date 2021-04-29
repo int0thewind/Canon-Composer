@@ -1,5 +1,5 @@
 from random import shuffle
-from typing import Dict, Literal
+from typing import Dict
 
 convert_dict: Dict[int, int] = {
     1: 0,
@@ -115,7 +115,7 @@ class Note:
         shuffle(ret)
         return ret
 
-    def get_distance(self, other):
+    def get_distance(self, other) -> int:
         num0 = self.num
         num1 = other.num
         distance = abs(num0 - num1)
@@ -125,26 +125,3 @@ class Note:
 
     def convert(self, root: int):
         return convert_dict[self.num] + root
-
-
-# def convert(root: int, data):
-#     ret = []
-#     for d in data:
-#         if isinstance(d, int):
-#             ret.append(convert_dict[d] + root)
-#         elif isinstance(d, list):
-#             ret.append(convert(root, d))
-#         else:
-#             raise TypeError(f'data contains non-integer element {d}')
-#     return ret
-
-
-if __name__ == '__main__':
-    note = Note(4)
-    print(note)
-    print(note.get_second())
-    print(note.get_third())
-    print(note.get_forth())
-    print(note.get_fifth())
-    print(note.get_sixth())
-    print(note.get_seventh())
