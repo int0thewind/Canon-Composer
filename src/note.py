@@ -1,6 +1,5 @@
 from random import shuffle, choice
-from typing import Dict, Any, List, Union
-from copy import copy
+from typing import Dict
 
 note_to_midi: Dict[int, int] = {
     1: 0,
@@ -142,18 +141,3 @@ INVERSE_POSSIBLE_NOTE = {
 ALL_NOTES = {
     Note(1), Note(2), Note(3), Note(4), Note(5), Note(6), Note(7),
 }
-
-
-def reverse(note_list: List):
-    list_copy = note_list.copy()
-    list_copy.reverse()
-    return list_copy
-
-
-def shift(note_list: List):
-    assert len(note_list) % 2 == 0
-    middle_point = len(note_list) % 2
-    list_copy = note_list.copy()
-    list_copy[0: middle_point] = note_list[middle_point: len(note_list)]
-    list_copy[middle_point: len(note_list)] = note_list[0: middle_point]
-    return list_copy
