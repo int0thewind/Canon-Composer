@@ -1,7 +1,7 @@
-from typing import List, Tuple, Optional
 from random import random, choice, shuffle
+from typing import List, Tuple, Optional
 
-from src.note import Note, INVERSE_POSSIBLE_NOTE, ALL_NOTES
+from src.note import Note, INVERSE_POSSIBLE_NOTE
 
 NoteSeries = List[Optional[Note]]
 
