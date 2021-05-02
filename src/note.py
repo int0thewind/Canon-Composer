@@ -1,5 +1,5 @@
 from random import shuffle, choice
-from typing import Dict
+from typing import Dict, List, Tuple
 
 note_to_midi: Dict[int, int] = {
     1: 0,
@@ -84,7 +84,7 @@ class Note:
     def get_second(self):
         return self._get_interval(1)
 
-    def thirds(self):
+    def get_thirds(self):
         return self._get_interval(2)
 
     def get_forth(self):
@@ -117,19 +117,24 @@ class Note:
         shuffle(ret)
         return ret
 
-    # def dist(self, other) -> int:
-    #     dist = abs(self._distance(other))
-    #     if dist > 3:
-    #         dist = 7 - dist
-    #     return dist
-
     def __sub__(self, other) -> int:
         dist = abs(self._distance(other))
         if dist > 3:
             dist = 7 - dist
         return dist
 
-    def convert(self, root: int):
+    def get_all_possible_midi(self, root: int) -> List[int]:
+        midi = self.convert(root)
+        assert midi >= 0
+        ret: List[int] = []
+        while midi - 12 >= 0:
+            midi -= 12
+        while midi <= 127:
+            ret.append(midi)
+            midi += 12
+        return ret
+
+    def convert(self, root: int) -> int:
         return note_to_midi[self.num] + root
 
 
@@ -137,7 +142,12 @@ INVERSE_POSSIBLE_NOTE = {
     Note(2), Note(3), Note(4),
 }
 
-
 ALL_NOTES = {
     Note(1), Note(2), Note(3), Note(4), Note(5), Note(6), Note(7),
 }
+
+
+def third_generator() -> Tuple[Note, Note]:
+    first = choice(list(ALL_NOTES))
+    second = choice(list(first.get_thirds()))
+    return first, second

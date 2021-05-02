@@ -14,7 +14,7 @@ def _create_note_series(note_num: int) -> Tuple[NoteSeries, NoteSeries]:
     return [None for _ in range(note_num)], [None for _ in range(note_num)]
 
 
-def shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
+def shift(note_num: int, melodic: bool = False):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -41,7 +41,7 @@ def shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
             search_success = False
 
             for pri_note in pri_possible_notes:
-                sec_possible_thirds = pri_note.thirds()
+                sec_possible_thirds = pri_note.get_thirds()
                 intersect = sec_possible_thirds.intersection(sec_possible_notes)
                 if len(intersect) > 0:
                     search_success = True
@@ -64,7 +64,7 @@ def shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     return pri, sec
 
 
-def reverse(note_num: int, reduce_leap: bool, reduce_unison: bool):
+def reverse(note_num: int, melodic: bool = False):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -90,7 +90,7 @@ def reverse(note_num: int, reduce_leap: bool, reduce_unison: bool):
 
             search_success = False
             for pri_note in pri_possible_notes:
-                sec_possible_thirds = pri_note.thirds()
+                sec_possible_thirds = pri_note.get_thirds()
                 intersect = sec_possible_thirds.intersection(sec_possible_notes)
                 if len(intersect) > 0:
                     search_success = True
@@ -114,7 +114,7 @@ def reverse(note_num: int, reduce_leap: bool, reduce_unison: bool):
     return pri, sec
 
 
-def reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
+def reverse_shift(note_num: int, melodic: bool = False):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -142,7 +142,7 @@ def reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
 
             search_success = False
             for pri_note in pri_possible_notes:
-                sec_possible_thirds = pri_note.thirds()
+                sec_possible_thirds = pri_note.get_thirds()
                 intersect = sec_possible_thirds.intersection(sec_possible_notes)
                 # if len(intersect) > 0:
                 if len(intersect) > 0:
@@ -178,7 +178,7 @@ def reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     return pri, sec
 
 
-def inverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
+def inverse_shift(note_num: int, melodic: bool = False):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -201,7 +201,7 @@ def inverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
 
             search_success = False
             for pri_note in pri_possible_notes:
-                sec_possible_thirds = pri_note.thirds()
+                sec_possible_thirds = pri_note.get_thirds()
                 intersect = sec_possible_thirds.intersection(sec_possible_notes)
                 while len(intersect) > 0:
                     primary_candidate_collection = pri[i - 1 + half_point].get_next_possible_notes()
@@ -227,7 +227,7 @@ def inverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     return pri, sec
 
 
-def inverse_reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
+def inverse_reverse_shift(note_num: int, melodic: bool = False):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -251,12 +251,12 @@ def inverse_reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool)
 
             search_success = False
             for pri_note in pri_possible_notes:
-                sec_possible_thirds = pri_note.thirds()
+                sec_possible_thirds = pri_note.get_thirds()
                 intersect = sec_possible_thirds.intersection(sec_possible_notes)
                 for sec_note_inv in intersect:
                     sec_note = sec_note_inv.inv()
                     pri_note_inv = pri_note.inv()
-                    if sec_note in pri_note_inv.thirds():
+                    if sec_note in pri_note_inv.get_thirds():
                         search_success = True
                         pri[i] = pri_note
                         sec[i] = sec_note_inv
