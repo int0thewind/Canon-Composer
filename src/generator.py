@@ -2,6 +2,7 @@ from random import random, choice, shuffle
 from typing import List, Tuple, Optional
 
 from src.note import Note, INVERSE_POSSIBLE_NOTE
+from src.noteseries import unison_check, leap_check
 
 NoteSeries = List[Optional[Note]]
 
@@ -9,15 +10,11 @@ NoteSeries = List[Optional[Note]]
 # TODO: meta requirements: Melody no big leap
 
 
-def _randbin() -> int:
-    return int(random() < 0.5)
-
-
 def _create_note_series(note_num: int) -> Tuple[NoteSeries, NoteSeries]:
     return [None for _ in range(note_num)], [None for _ in range(note_num)]
 
 
-def shift(note_num: int, reduce_leap: bool = False):
+def shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -34,32 +31,40 @@ def shift(note_num: int, reduce_leap: bool = False):
     del sel
 
     # Generate the rest
-    i = 1
-    while 1 <= i < half_point - 1:
-        pri_possible_notes = pri[i - 1].get_next_possible_notes()
-        sec_possible_notes = sec[i - 1].get_next_possible_notes()
+    meet_requirement = False
+    while not meet_requirement:
+        i = 1
+        while 1 <= i < half_point - 1:
+            pri_possible_notes = pri[i - 1].get_next_possible_notes()
+            sec_possible_notes = sec[i - 1].get_next_possible_notes()
 
-        search_success = False
+            search_success = False
 
-        for pri_note in pri_possible_notes:
-            sec_possible_thirds = pri_note.thirds()
-            intersect = sec_possible_thirds.intersection(sec_possible_notes)
-            if len(intersect) > 0:
-                search_success = True
-                pri[i] = pri_note
-                sec[i] = intersect.pop()
-                break
+            for pri_note in pri_possible_notes:
+                sec_possible_thirds = pri_note.thirds()
+                intersect = sec_possible_thirds.intersection(sec_possible_notes)
+                if len(intersect) > 0:
+                    search_success = True
+                    pri[i] = pri_note
+                    sec[i] = intersect.pop()
+                    break
 
-        i += 1 if search_success else -1
+            i += 1 if search_success else -1
 
-    # Fill up the rest
-    pri[half_point:len(pri)] = sec[0:half_point]
-    sec[half_point:len(pri)] = pri[0:half_point]
+        # Fill up the rest
+        pri[half_point:len(pri)] = sec[0:half_point]
+        sec[half_point:len(pri)] = pri[0:half_point]
+
+        meet_requirement = True
+        if reduce_leap:
+            meet_requirement &= leap_check(pri, 3 if 8 <= note_num < 12 else 4)
+        if reduce_unison:
+            meet_requirement &= unison_check(pri, 1 if 8 <= note_num < 12 else 2)
 
     return pri, sec
 
 
-def reverse(note_num: int, reduce_leap: bool = False):
+def reverse(note_num: int, reduce_leap: bool, reduce_unison: bool):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -76,32 +81,40 @@ def reverse(note_num: int, reduce_leap: bool = False):
     del sel
 
     # Generate the rest
-    i = 2
-    while 1 <= i < half_point:
-        pri_possible_notes = pri[i - 1].get_next_possible_notes()
-        sec_possible_notes = sec[i - 1].get_next_possible_notes()
+    meet_requirement = False
+    while not meet_requirement:
+        i = 2
+        while 1 <= i < half_point:
+            pri_possible_notes = pri[i - 1].get_next_possible_notes()
+            sec_possible_notes = sec[i - 1].get_next_possible_notes()
 
-        search_success = False
-        for pri_note in pri_possible_notes:
-            sec_possible_thirds = pri_note.thirds()
-            intersect = sec_possible_thirds.intersection(sec_possible_notes)
-            if len(intersect) > 0:
-                search_success = True
-                pri[i] = pri_note
-                sec[i] = intersect.pop()
-                break
+            search_success = False
+            for pri_note in pri_possible_notes:
+                sec_possible_thirds = pri_note.thirds()
+                intersect = sec_possible_thirds.intersection(sec_possible_notes)
+                if len(intersect) > 0:
+                    search_success = True
+                    pri[i] = pri_note
+                    sec[i] = intersect.pop()
+                    break
 
-        i += 1 if search_success else -1
+            i += 1 if search_success else -1
 
-    # Fill up the rest
-    for i in range(half_point, note_num):
-        pri[i] = sec[note_num - i - 1]
-        sec[i] = pri[note_num - i - 1]
+        # Fill up the rest
+        for i in range(half_point, note_num):
+            pri[i] = sec[note_num - i - 1]
+            sec[i] = pri[note_num - i - 1]
+
+        meet_requirement = True
+        if reduce_leap:
+            meet_requirement &= leap_check(pri, 3 if 8 <= note_num < 12 else 4)
+        if reduce_unison:
+            meet_requirement &= unison_check(pri, 1 if 8 <= note_num < 12 else 2)
 
     return pri, sec
 
 
-def reverse_shift(note_num: int, reduce_leap: bool = False):
+def reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -151,13 +164,21 @@ def reverse_shift(note_num: int, reduce_leap: bool = False):
                 pri[start + mid] = sel
                 sec[start + mid] = sel
 
-    reverse_shift_helper(0, half_point)
-    reverse_shift_helper(half_point, note_num)
+    meet_requirement = False
+    while not meet_requirement:
+        reverse_shift_helper(0, half_point)
+        reverse_shift_helper(half_point, note_num)
+
+        meet_requirement = True
+        if reduce_leap:
+            meet_requirement &= leap_check(pri, 3 if 8 <= note_num < 12 else 4)
+        if reduce_unison:
+            meet_requirement &= unison_check(pri, 1 if 8 <= note_num < 12 else 2)
 
     return pri, sec
 
 
-def inverse_shift(note_num: int, reduce_leap: bool = False):
+def inverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -171,34 +192,42 @@ def inverse_shift(note_num: int, reduce_leap: bool = False):
     sec[-1] = pri[half_point - 1].inv()
     sec[half_point], sec[half_point - 1] = Note(5), Note(5)
 
-    i = 1
-    while 1 <= i < half_point - 1:
-        pri_possible_notes = pri[i - 1].get_next_possible_notes()
-        sec_possible_notes = sec[i - 1].get_next_possible_notes()
+    meet_requirement = False
+    while not meet_requirement:
+        i = 1
+        while 1 <= i < half_point - 1:
+            pri_possible_notes = pri[i - 1].get_next_possible_notes()
+            sec_possible_notes = sec[i - 1].get_next_possible_notes()
 
-        search_success = False
-        for pri_note in pri_possible_notes:
-            sec_possible_thirds = pri_note.thirds()
-            intersect = sec_possible_thirds.intersection(sec_possible_notes)
-            while len(intersect) > 0:
-                primary_candidate_collection = pri[i - 1 + half_point].get_next_possible_notes()
-                primary_candidate = intersect.pop()
-                if primary_candidate in primary_candidate_collection:
-                    search_success = True
-                    pri[i] = pri_note
-                    pri[i + half_point] = primary_candidate.inv()
-                    sec[i] = pri[i + half_point].inv()
-                    sec[i + half_point] = pri[i].inv()
+            search_success = False
+            for pri_note in pri_possible_notes:
+                sec_possible_thirds = pri_note.thirds()
+                intersect = sec_possible_thirds.intersection(sec_possible_notes)
+                while len(intersect) > 0:
+                    primary_candidate_collection = pri[i - 1 + half_point].get_next_possible_notes()
+                    primary_candidate = intersect.pop()
+                    if primary_candidate in primary_candidate_collection:
+                        search_success = True
+                        pri[i] = pri_note
+                        pri[i + half_point] = primary_candidate.inv()
+                        sec[i] = pri[i + half_point].inv()
+                        sec[i + half_point] = pri[i].inv()
+                        break
+                if search_success:
                     break
-            if search_success:
-                break
 
-        i += 1 if search_success else -1
+            i += 1 if search_success else -1
+
+        meet_requirement = True
+        if reduce_leap:
+            meet_requirement &= leap_check(pri, 3 if 8 <= note_num < 12 else 4)
+        if reduce_unison:
+            meet_requirement &= unison_check(pri, 1 if 8 <= note_num < 12 else 2)
 
     return pri, sec
 
 
-def inverse_reverse_shift(note_num: int, reduce_leap: bool = False):
+def inverse_reverse_shift(note_num: int, reduce_leap: bool, reduce_unison: bool):
     pri, sec = _create_note_series(note_num)
     half_point = note_num // 2
 
@@ -242,17 +271,22 @@ def inverse_reverse_shift(note_num: int, reduce_leap: bool = False):
                 pri[start + mid] = sel
                 sec[start + mid] = sel.inv()
 
-    inverse_reverse_shift_helper(0, half_point)
-    inverse_reverse_shift_helper(half_point, note_num)
+    meet_requirement = False
+    while not meet_requirement:
+        inverse_reverse_shift_helper(0, half_point)
+        inverse_reverse_shift_helper(half_point, note_num)
+
+        meet_requirement = True
+        if reduce_leap:
+            meet_requirement &= leap_check(pri, 3 if 8 <= note_num < 12 else 4)
+        if reduce_unison:
+            meet_requirement &= unison_check(pri, 1 if 8 <= note_num < 12 else 2)
 
     return pri, sec
 
 
-def main():
-    primary, secondary = inverse_reverse_shift(8)
+if __name__ == '__main__':
+    primary, secondary = inverse_reverse_shift(8, True, True)
     print(primary)
     print(secondary)
-
-
-if __name__ == '__main__':
-    main()
+    # print(Note(2) - Note(6))

@@ -15,17 +15,18 @@ def index():
     canon_type = request.args.get('type')
     num_note = int(request.args.get('notenum'))
     reduce_leap = bool(request.args.get('reduceleap'))
+    reduce_unison = bool(request.args.get('reduceunison'))
 
     if canon_type == 'S':
-        series = shift(num_note, reduce_leap=reduce_leap)
+        series = shift(num_note, reduce_leap, reduce_unison)
     elif canon_type == 'R':
-        series = reverse(num_note, reduce_leap=reduce_leap)
+        series = reverse(num_note, reduce_leap, reduce_unison)
     elif canon_type == 'RS':
-        series = reverse_shift(num_note, reduce_leap=reduce_leap)
+        series = reverse_shift(num_note, reduce_leap, reduce_unison)
     elif canon_type == 'IS':
-        series = inverse_shift(num_note, reduce_leap=reduce_leap)
+        series = inverse_shift(num_note, reduce_leap, reduce_unison)
     elif canon_type == 'IRS':
-        series = inverse_reverse_shift(num_note, reduce_leap=reduce_leap)
+        series = inverse_reverse_shift(num_note, reduce_leap, reduce_unison)
     else:
         return make_error_response('Incorrect canon type')
 

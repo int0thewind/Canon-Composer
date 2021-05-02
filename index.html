@@ -30,11 +30,11 @@
         </label>
         <label>Select a canon type:
             <select name="type" id="select-type">
-                <option value="S">Coming Later</option>
+                <option value="S">Shift</option>
                 <option value="R">Reverse</option>
-                <option value="RS">Reverse and Coming Later</option>
-                <option value="IS">Inverse & Coming Later</option>
-                <option value="IRS">Inverse & Reverse & Coming Later</option>
+                <option value="RS">Shift-Reverse</option>
+                <option value="IS">Inverse-Shift</option>
+                <option value="IRS">Inverse-Reverse-Shift</option>
             </select>
         </label>
         <label>Select number of notes:
@@ -46,8 +46,13 @@
                 <option value="16">16</option>
             </select>
         </label>
-        <label for="reduce-leap">Reduce leaps
+        <label>
+            Reduce leaps
             <input type="checkbox" name="reduceleap" id="reduce-leap">
+        </label>
+        <label>
+            Reduce unison
+            <input type="checkbox" name="reduceunison" id="reduce-unison">
         </label>
     </fieldset>
     <button type="reset">Reset</button>

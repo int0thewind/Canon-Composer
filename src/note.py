@@ -117,11 +117,11 @@ class Note:
         shuffle(ret)
         return ret
 
-    def dist(self, other) -> int:
-        dist = abs(self._distance(other))
-        if dist > 3:
-            dist = 7 - dist
-        return dist
+    # def dist(self, other) -> int:
+    #     dist = abs(self._distance(other))
+    #     if dist > 3:
+    #         dist = 7 - dist
+    #     return dist
 
     def __sub__(self, other) -> int:
         dist = abs(self._distance(other))

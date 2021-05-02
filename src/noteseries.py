@@ -24,3 +24,11 @@ def leap_check(note_list: List[Note], max_leaps: int) -> bool:
         if note_list[i] - note_list[i + 1] >= 2:
             leaps += 1
     return leaps <= max_leaps
+
+
+def unison_check(note_list: List[Note], max_unison: int) -> bool:
+    leaps = 0
+    for i in range(len(note_list) - 1):
+        if note_list[i] - note_list[i + 1] == 0:
+            leaps += 1
+    return leaps <= max_unison
