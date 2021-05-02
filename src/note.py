@@ -147,7 +147,7 @@ ALL_NOTES = {
 }
 
 
-def third_generator() -> Tuple[Note, Note]:
+def thirds_generator() -> Tuple[Note, Note]:
     first = choice(list(ALL_NOTES))
     second = choice(list(first.get_thirds()))
     return first, second

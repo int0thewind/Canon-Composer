@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from src.note import Note
 
@@ -32,3 +32,6 @@ def unison_check(note_list: List[Note], max_unison: int) -> bool:
         if note_list[i] - note_list[i + 1] == 0:
             leaps += 1
     return leaps <= max_unison
+
+
+NoteSeries = List[Optional[Note]]

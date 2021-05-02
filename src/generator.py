@@ -1,13 +1,8 @@
-from random import random, choice, shuffle
-from typing import List, Tuple, Optional
+from random import choice, shuffle
+from typing import Tuple
 
 from src.note import Note, INVERSE_POSSIBLE_NOTE
-from src.noteseries import unison_check, leap_check
-
-NoteSeries = List[Optional[Note]]
-
-
-# TODO: meta requirements: Melody no big leap
+from src.noteseries import unison_check, leap_check, NoteSeries
 
 
 def _create_note_series(note_num: int) -> Tuple[NoteSeries, NoteSeries]:
