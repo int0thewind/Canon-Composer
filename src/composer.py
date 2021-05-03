@@ -187,9 +187,17 @@ def reverse_shift_melodic(note_num: int):
     sec[half] = Note(1)
 
     # Generate fixed middles
-    sec[0] = Note.choice(1, 3, 6)
+    sec[0], pri[half] = random.choice([
+        (Note(1), Note(1)),
+        (Note(1), Note(3)),
+        (Note(1), Note(6)),
+        (Note(3), Note(1)),
+        (Note(3), Note(3)),
+        (Note(6), Note(1)),
+        (Note(6), Note(6)),
+    ])
+
     pri[half - 1] = sec[0]
-    pri[half] = Note.choice(1, 3, 6)
     sec[-1] = pri[half]
 
     # Fill in thirds
@@ -245,7 +253,7 @@ def reverse_shift_melodic(note_num: int):
                 if len(intersect) > 0:
                     pri[i2] = pri_note
                     sec[i2] = intersect.pop()
-                    pri[note_num - i - 1], sec[note_num - i - 1] = sec[i], pri[i]
+                    pri[note_num - i - 1], sec[note_num - i - 1] = sec[i2], pri[i2]
                     break
         if is_odd:
             pri[half_half + half] = choose_from_all_notes()

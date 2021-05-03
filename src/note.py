@@ -116,7 +116,7 @@ class Note:
         return dist
 
     def get_all_possible_midi(self, root: int) -> List[int]:
-        midi = self.convert(root)
+        midi = self.convert_to_midi(root)
         assert midi >= 0
         ret: List[int] = []
         while midi - 12 >= 0:
@@ -126,7 +126,7 @@ class Note:
             midi += 12
         return ret
 
-    def convert(self, root: int) -> int:
+    def convert_to_midi(self, root: int) -> int:
         return note_to_midi[self.num] + root
 
 
