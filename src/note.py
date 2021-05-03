@@ -102,16 +102,8 @@ class Note:
     def inv(self):
         return Note(6 - self.num)
 
-    def get_next_possible_notes(self, /, no_option=True, keep=False, step=False, leap=False):
-        if no_option:
-            ret = list(ALL_NOTES)
-            shuffle(ret)
-            return ret
-        ret = []
-        if keep:
-            ret += [self]
-        if step:
-            ret += [Note(self.num - 1), Note(self.num + 1)]
+    def get_next_possible_notes(self, /, leap=True):
+        ret = [Note(self.num - 1), Note(self.num + 1)]
         if leap:
             ret += [Note(self.num - 2), Note(self.num + 2)]
         shuffle(ret)

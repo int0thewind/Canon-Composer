@@ -11,7 +11,7 @@ def reverse_notes(note_list: List[Note]) -> List[Note]:
 
 def shift_notes(note_list: List[Note]) -> List[Note]:
     assert len(note_list) % 2 == 0
-    middle_point = len(note_list) % 2
+    middle_point = len(note_list) // 2
     list_copy = note_list.copy()
     list_copy[0: middle_point] = note_list[middle_point: len(note_list)]
     list_copy[middle_point: len(note_list)] = note_list[0: middle_point]
