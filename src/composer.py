@@ -180,6 +180,92 @@ def reverse_shift(note_num: int):
 def reverse_shift_melodic(note_num: int):
     pri, sec, half = _prepare(note_num)
 
+    # Generate headers
+    pri[0] = Note(1)
+    sec[half - 1] = Note(1)
+    pri[-1] = Note(1)
+    sec[half] = Note(1)
+
+    # Generate fixed middles
+    sec[0] = Note.choice(1, 3, 6)
+    pri[half - 1] = sec[0]
+    pri[half] = Note.choice(1, 3, 6)
+    sec[-1] = pri[half]
+
+    # Fill in thirds
+    is_odd = half % 2 != 0
+    half_half = half // 2
+
+    first_half_passed = False
+    while not first_half_passed:
+        for i in range(1, half_half):
+            pri_possible_notes = pri[i - 1].get_next_possible_notes(
+                leap=(True if i == 1 else pri[i - 2] - pri[i - 1] < 2)
+            )
+            sec_possible_notes = sec[i - 1].get_next_possible_notes(
+                leap=(False if i == 1 else sec[i - 2] - sec[i - 1] < 2)
+            )
+
+            for pri_note in pri_possible_notes:
+                sec_possible_thirds: Set[Note] = pri_note.get_thirds()
+                intersect = sec_possible_thirds.intersection(sec_possible_notes)
+                if len(intersect) > 0:
+                    pri[i] = pri_note
+                    sec[i] = intersect.pop()
+                    pri[half - i - 1], sec[half - i - 1] = sec[i], pri[i]
+                    break
+
+        if is_odd:
+            pri_possible_notes = pri[half_half - 1].get_next_possible_notes(leap=False)
+            sec_possible_notes = sec[half_half - 1].get_next_possible_notes(leap=False)
+            intersect = set(pri_possible_notes).intersection(sec_possible_notes)
+            if len(intersect) > 0:
+                pri[half_half] = intersect.pop()
+                sec[half_half] = pri[half_half]
+                first_half_passed = True
+            else:
+                first_half_passed = False
+        else:
+            first_half_passed = True
+
+    second_half_passed = False
+    while not second_half_passed:
+        for i in range(1, half_half):
+            i2 = i + half
+            pri_possible_notes = pri[i - 1].get_next_possible_notes(
+                leap=(pri[i2 - 2] - pri[i2 - 1] < 2)
+            )
+            sec_possible_notes = sec[i - 1].get_next_possible_notes(
+                leap=(sec[i2 - 2] - sec[i2 - 1] < 2)
+            )
+
+            for pri_note in pri_possible_notes:
+                sec_possible_thirds: Set[Note] = pri_note.get_thirds()
+                intersect = sec_possible_thirds.intersection(sec_possible_notes)
+                if len(intersect) > 0:
+                    pri[i2] = pri_note
+                    sec[i2] = intersect.pop()
+                    pri[note_num - i - 1], sec[note_num - i - 1] = sec[i], pri[i]
+                    break
+        if is_odd:
+            pri[half_half + half] = choose_from_all_notes()
+            sec[half_half + half] = pri[half_half + half]
+
+            pri_possible_notes = pri[half_half + half - 1].get_next_possible_notes(leap=False)
+            sec_possible_notes = sec[half_half + half - 1].get_next_possible_notes(leap=False)
+            intersect = set(pri_possible_notes).intersection(sec_possible_notes)
+            if len(intersect) > 0:
+                pri[half_half + half] = intersect.pop()
+                sec[half_half + half] = pri[half_half + half]
+                second_half_passed = True
+            else:
+                second_half_passed = False
+        else:
+            second_half_passed = True
+
+    # Fill the rest
+    # NOP
+
     return pri, sec
 
 
