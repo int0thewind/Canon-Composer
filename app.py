@@ -1,5 +1,6 @@
 from flask import Flask, request, make_response
-from src.generator import shift, reverse, reverse_shift, inverse_shift, inverse_reverse_shift
+from src.composer import shift, reverse, reverse_shift, inverse_shift, inverse_reverse_shift,\
+    shift_melodic, reverse_shift_melodic, reverse_melodic
 
 app = Flask(__name__)
 
@@ -14,19 +15,18 @@ def index():
     root = request.args.get('root')
     canon_type = request.args.get('type')
     num_note = int(request.args.get('notenum'))
-    reduce_leap = bool(request.args.get('reduceleap'))
-    reduce_unison = bool(request.args.get('reduceunison'))
+    melodic = bool(request.args.get('melodic'))
 
     if canon_type == 'S':
-        series = shift(num_note, reduce_leap, reduce_unison)
+        pri, sec = shift(num_note) if not melodic else shift_melodic(num_note)
     elif canon_type == 'R':
-        series = reverse(num_note, reduce_leap, reduce_unison)
+        pri, sec = reverse(num_note) if not melodic else reverse_melodic(num_note)
     elif canon_type == 'RS':
-        series = reverse_shift(num_note, reduce_leap, reduce_unison)
+        pri, sec = reverse_shift(num_note) if not melodic else reverse_shift_melodic(num_note)
     elif canon_type == 'IS':
-        series = inverse_shift(num_note, reduce_leap, reduce_unison)
+        pri, sec = inverse_shift(num_note)
     elif canon_type == 'IRS':
-        series = inverse_reverse_shift(num_note, reduce_leap, reduce_unison)
+        pri, sec = inverse_reverse_shift(num_note)
     else:
         return make_error_response('Incorrect canon type')
 

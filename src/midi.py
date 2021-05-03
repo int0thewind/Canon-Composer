@@ -1,10 +1,10 @@
-import math
 import sys
 from math import ceil
 from random import choices
 from typing import List, Literal, Dict, Tuple
-from src.note import Note
+
 from src.canontype import CanonTypeAbbr
+from src.note import Note
 
 NoteLeap = Literal['no_jump', 'jump_up', 'jump_down']
 

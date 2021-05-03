@@ -3,19 +3,23 @@ from typing import List, Optional
 from src.note import Note
 
 
-def reverse(note_list: List[Note]) -> List[Note]:
+def reverse_notes(note_list: List[Note]) -> List[Note]:
     list_copy = note_list.copy()
     list_copy.reverse()
     return list_copy
 
 
-def shift(note_list: List[Note]) -> List[Note]:
+def shift_notes(note_list: List[Note]) -> List[Note]:
     assert len(note_list) % 2 == 0
     middle_point = len(note_list) % 2
     list_copy = note_list.copy()
     list_copy[0: middle_point] = note_list[middle_point: len(note_list)]
     list_copy[middle_point: len(note_list)] = note_list[0: middle_point]
     return list_copy
+
+
+def inverse_notes(note_list: List[Note]) -> List[Note]:
+    return [note.inv() for note in note_list]
 
 
 def leap_check(note_list: List[Note], max_leaps: int) -> bool:

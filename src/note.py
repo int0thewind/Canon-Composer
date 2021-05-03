@@ -142,12 +142,21 @@ INVERSE_POSSIBLE_NOTE = {
     Note(2), Note(3), Note(4),
 }
 
+
+def choose_from_inverse_possible_note():
+    return choice(list(INVERSE_POSSIBLE_NOTE))
+
+
 ALL_NOTES = {
     Note(1), Note(2), Note(3), Note(4), Note(5), Note(6), Note(7),
 }
 
 
-def thirds_generator() -> Tuple[Note, Note]:
+def choose_from_all_notes():
+    return choice(list(ALL_NOTES))
+
+
+def fill_in_thirds() -> Tuple[Note, Note]:
     first = choice(list(ALL_NOTES))
     second = choice(list(first.get_thirds()))
     return first, second
