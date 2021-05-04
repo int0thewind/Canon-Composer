@@ -1,17 +1,13 @@
 import sys
-from math import ceil
-from random import choices
-from typing import List, Literal, Dict, Tuple
+from typing import List, Literal
 
-from src.canontype import CanonTypeAbbr
-from src.note import Note
-
-from musx.midi.midiseq import MidiSeq
 from musx.midi.midifile import MidiFile
-from musx.scheduler import Scheduler
-from musx.rhythm import rhythm
 from musx.midi.midinote import MidiNote
+from musx.midi.midiseq import MidiSeq
+from musx.rhythm import rhythm
+from musx.scheduler import Scheduler
 
+from src.note import Note
 
 NoteLeap = Literal['no_jump', 'jump_up', 'jump_down']
 

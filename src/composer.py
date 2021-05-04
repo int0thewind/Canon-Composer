@@ -1,8 +1,8 @@
 import random
-
-from src.note import Note, fill_in_thirds, choose_from_inverse_possible_note, choose_from_all_notes,\
-    INVERSE_POSSIBLE_NOTE
 from typing import Tuple, Set
+
+from src.note import Note, fill_in_thirds, choose_from_inverse_possible_note, choose_from_all_notes, \
+    INVERSE_POSSIBLE_NOTE
 from src.noteseries import NoteSeries, inverse_notes, reverse_notes
 
 
