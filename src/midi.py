@@ -45,8 +45,8 @@ def _find_closest_midi(target: int, int_list: List[int]) -> int:
 
 
 def note_series_to_midi_number(note_list: List[Note], root: int):
-    upper_bound = root + 7
-    lower_bound = root - 7
+    upper_bound = root + 9
+    lower_bound = root - 9
 
     ret = [note_list[0].convert_to_midi(root)]
     for i in range(1, len(note_list)):

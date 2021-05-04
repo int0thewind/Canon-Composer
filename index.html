@@ -7,53 +7,55 @@
     <title>Canon Composer</title>
 </head>
 <body>
-<div>
-<form action="http://localhost:5000/" method="get">
-    <fieldset style="display: flex; flex-direction: column;">
-        <legend>Customize canon type</legend>
-        <label>
-            Select a root note:
-            <select name="root" id="select-root">
-                <option value="c">C</option>
-                <option value="g">G</option>
-                <option value="d">D</option>
-                <option value="a">A</option>
-                <option value="e">E</option>
-                <option value="b">B</option>
-                <option value="g-flat">G-flat</option>
-                <option value="d-flat">D-flat</option>
-                <option value="a-flat">A-flat</option>
-                <option value="e-flat">E-flat</option>
-                <option value="b-flat">B-flat</option>
-                <option value="f">F</option>
-            </select>
-        </label>
-        <label>Select a canon type:
-            <select name="type" id="select-type">
-                <option value="S">Shift</option>
-                <option value="R">Reverse</option>
-                <option value="RS">Shift-Reverse</option>
-                <option value="IS">Inverse-Shift</option>
-                <option value="IRS">Inverse-Reverse-Shift</option>
-            </select>
-        </label>
-        <label>Select number of notes:
-            <select name="notenum" id="select-notenum">
-                <option value="8">8</option>
-                <option value="10">10</option>
-                <option value="12">12</option>
-                <option value="14">14</option>
-                <option value="16">16</option>
-            </select>
-        </label>
-        <label>
-            Make the canon more melodic
-            <input type="checkbox" name="melodic" id="melodic">
-        </label>
-    </fieldset>
-    <button type="reset">Reset</button>
-    <button type="submit">Submit</button>
-</form>
+<div style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
+    <form action="http://localhost:5000/" method="get">
+        <fieldset style="display: flex; flex-direction: column;">
+            <label>
+                Select a root note:
+                <select name="root" id="select-root">
+                    <option value="c">C</option>
+                    <option value="g">G</option>
+                    <option value="d">D</option>
+                    <option value="a">A</option>
+                    <option value="e">E</option>
+                    <option value="b">B</option>
+                    <option value="g-flat">G-flat</option>
+                    <option value="d-flat">D-flat</option>
+                    <option value="a-flat">A-flat</option>
+                    <option value="e-flat">E-flat</option>
+                    <option value="b-flat">B-flat</option>
+                    <option value="f">F</option>
+                </select>
+            </label>
+            <label>Select a canon type:
+                <select name="type" id="select-type">
+                    <option value="S">Shift</option>
+                    <option value="R">Reverse</option>
+                    <option value="RS">Shift-Reverse</option>
+                    <option value="IS">Inverse-Shift</option>
+                    <option value="IRS">Inverse-Reverse-Shift</option>
+                </select>
+            </label>
+            <label>Select number of notes:
+                <select name="notenum" id="select-notenum">
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                </select>
+            </label>
+            <label>
+                Make the canon more melodic
+                <input type="checkbox" name="melodic" id="melodic">
+            </label>
+            <span style="color: red">
+                All inverse related canon currently does not support melodic option.
+            </span>
+        </fieldset>
+        <button type="reset">Reset</button>
+        <button type="submit">Submit</button>
+    </form>
 </div>
 </body>
 </html>

@@ -1,15 +1,15 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from src.note import Note
 
 
-def reverse_notes(note_list: List[Note]) -> List[Note]:
+def reverse_notes(note_list: List[Any]) -> List[Note]:
     list_copy = note_list.copy()
     list_copy.reverse()
     return list_copy
 
 
-def shift_notes(note_list: List[Note]) -> List[Note]:
+def shift_notes(note_list: List[Any]) -> List[Note]:
     assert len(note_list) % 2 == 0
     middle_point = len(note_list) // 2
     list_copy = note_list.copy()
