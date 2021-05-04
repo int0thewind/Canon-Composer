@@ -357,7 +357,7 @@ def inverse_reverse_shift(note_num: int):
     sec[0] = Note.choice(1, 3, 6)
     pri[half - 1] = sec[0]
     pri[half] = Note.choice(3, 5, 7)
-    sec[-1] = pri[half]
+    sec[-1] = pri[half].inv()
 
     # Fill in thirds
     is_odd = half % 2 != 0
