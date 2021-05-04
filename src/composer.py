@@ -50,11 +50,12 @@ def shift_melodic(note_num: int):
     melody_passed = False
     while not melody_passed:
         for i in range(1, half - 1):
+            is_start = i == 1
             pri_possible_notes = pri[i - 1].get_next_possible_notes(
-                leap=(True if i == 1 else pri[i - 2] - pri[i - 1] < 2)
+                leap=(True if is_start else pri[i - 2] - pri[i - 1] < 2)
             )
             sec_possible_notes = sec[i - 1].get_next_possible_notes(
-                leap=(False if i == 1 else sec[i - 2] - sec[i - 1] < 2)
+                leap=(False if is_start else sec[i - 2] - sec[i - 1] < 2)
             )
 
             for pri_note in pri_possible_notes:
@@ -113,11 +114,12 @@ def reverse_melodic(note_num: int):
 
     # Fill in thirds
     for i in range(2, half):
+        is_end = i == half - 1
         pri_possible_notes = pri[i - 1].get_next_possible_notes(
-            leap=(pri[i - 2] - pri[i - 1] < 2)
+            leap=(False if is_end else pri[i - 2] - pri[i - 1] < 2)
         )
         sec_possible_notes = sec[i - 1].get_next_possible_notes(
-            leap=(sec[i - 2] - sec[i - 1] < 2)
+            leap=(False if is_end else sec[i - 2] - sec[i - 1] < 2)
         )
 
         for pri_note in pri_possible_notes:
@@ -196,7 +198,6 @@ def reverse_shift_melodic(note_num: int):
         (Note(6), Note(1)),
         (Note(6), Note(6)),
     ])
-
     pri[half - 1] = sec[0]
     sec[-1] = pri[half]
 
@@ -208,7 +209,7 @@ def reverse_shift_melodic(note_num: int):
     while not first_half_passed:
         for i in range(1, half_half):
             pri_possible_notes = pri[i - 1].get_next_possible_notes(
-                leap=(True if i == 1 else pri[i - 2] - pri[i - 1] < 2)
+                leap=(False if i == 1 else pri[i - 2] - pri[i - 1] < 2)
             )
             sec_possible_notes = sec[i - 1].get_next_possible_notes(
                 leap=(False if i == 1 else sec[i - 2] - sec[i - 1] < 2)
@@ -240,10 +241,10 @@ def reverse_shift_melodic(note_num: int):
     while not second_half_passed:
         for i in range(1, half_half):
             i2 = i + half
-            pri_possible_notes = pri[i - 1].get_next_possible_notes(
+            pri_possible_notes = pri[i2 - 1].get_next_possible_notes(
                 leap=(pri[i2 - 2] - pri[i2 - 1] < 2)
             )
-            sec_possible_notes = sec[i - 1].get_next_possible_notes(
+            sec_possible_notes = sec[i2 - 1].get_next_possible_notes(
                 leap=(sec[i2 - 2] - sec[i2 - 1] < 2)
             )
 
@@ -301,8 +302,76 @@ def inverse_shift(note_num: int):
     return pri, sec
 
 
+def inverse_shift_melodic(note_num: int):
+    pri, sec, half = _prepare(note_num)
+
+    # TODO finish this function
+
+    # Generate headers
+    pri[0] = Note(1)
+    pri[-1] = Note(1)
+    sec[half - 1] = Note(5)
+    sec[half] = Note(5)
+
+    # Generate fixed middles
+    pri[half - 1] = Note.choice(3, 5, 7)
+    sec[0] = Note.choice(3, 5, 7)
+
+    # Fill in thirds
+    for i in range(1, half - 1):
+        pri[i], sec[i] = fill_in_thirds()
+
+    # Fill the rest
+    pri[half:note_num] = inverse_notes(sec[0:half])
+    sec[half:note_num] = inverse_notes(pri[0:half])
+
+    return pri, sec
+
+
 def inverse_reverse_shift(note_num: int):
     pri, sec, half = _prepare(note_num)
+
+    # Generate headers
+    pri[0] = Note(1)
+    pri[-1] = Note(1)
+    sec[half - 1] = Note(5)
+    sec[half] = Note(5)
+
+    # Generate fixed middles
+    sec[0] = Note.choice(1, 3, 6)
+    pri[half - 1] = sec[0]
+    pri[half] = Note.choice(3, 5, 7)
+    sec[-1] = pri[half]
+
+    # Fill in thirds
+    is_odd = half % 2 != 0
+    half_half = half // 2
+
+    for i in range(1, half_half):
+        pri[i], sec[i] = fill_in_thirds()
+        pri[half - i - 1], sec[half - i - 1] = sec[i].inv(), pri[i].inv()
+    if is_odd:
+        pri[half_half] = choose_from_inverse_possible_note()
+        sec[half_half] = pri[half_half].inv()
+
+    for i in range(1, half_half):
+        i2 = i + half
+        pri[i + half], sec[i + half] = fill_in_thirds()
+        pri[note_num - i - 1], sec[note_num - i - 1] = sec[i].inv(), pri[i].inv()
+    if is_odd:
+        pri[half_half + half] = choose_from_inverse_possible_note()
+        sec[half_half + half] = pri[half_half + half].inv()
+
+    # Fill the rest
+    # NOP
+
+    return pri, sec
+
+
+def inverse_reverse_shift_melodic(note_num: int):
+    pri, sec, half = _prepare(note_num)
+
+    # TODO finish this function
 
     # Generate headers
     pri[0] = Note(1)
